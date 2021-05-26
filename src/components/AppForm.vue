@@ -1,39 +1,30 @@
 <template>
     <form @submit.prevent="onSubmit">
-        <div class="form-control" :class="{'invalid' : $v.fio.$error }">
-            <label for="name">ФИО</label>
-            <input type="text" ref="name"
-                   id="name" v-model="fio"
-                   :class="{'invalid' : $v.fio.$error }">
-<!--            <small >{{$v.fio.required }}</small>-->
-            <small v-if="$v.fio.$dirty && !$v.fio.required"> Обязательное поле </small>
-            <small v-if="$v.fio.$dirty && !$v.fio.email"> Вы ввели некорректный email </small>
-        </div>
+<!--        <div class="form-control" :class="{'invalid' : $v.fio.$error }">-->
+<!--            <label for="name">ФИО</label>-->
+<!--            <input type="text" ref="name"-->
+<!--                   id="name" v-model="fio"-->
+<!--                   :class="{'invalid' : $v.fio.$error }"-->
+<!--            <small v-if="$v.fio.$dirty && !$v.fio.required"> Обязательное поле </small>-->
+<!--            <small v-if="$v.fio.$dirty && !$v.fio.email"> Вы ввели некорректный email </small>-->
+<!--        </div>-->
             <br>
-            <br>
-            <br>
-            <hr>
-        <div class="form-control" :class="{'invalid' : $v.fio.$error }">
-            <div class="form-group" :class="{ 'invalid': $v.fio.$error }">
-                <label>Name</label>
-                <input v-model.trim="$v.fio.$model"/>
-            </div>
-            <div class="error" v-if="!$v.fio.required">Field is required</div>
-            <div class="error" v-if="!$v.fio.minLength">Name must have at least {{$v.fio.$params.minLength.min}} letters.</div>
-        </div>
-            <br>
-            <br>
-            <br>
-            <hr>
-            <br>
-            <br>
-            <br>
-        <div class="form-control" :class="{'invalid' : $v.fio.$error }">
-            <label for="phone">Телефон</label>
-            <input type="text" id="phone" v-model="phone">
-<!--            <small v-if="$v.password.$error ">{{$v.password.$error }}</small>-->
 
-        </div>
+        <FormField  :validator-list="fioValidators"></FormField>
+        <FormField  :validator-list="fioValidators"></FormField>
+
+            <br>
+            <br>
+            <hr>
+<!--        <div class="form-control" :class="{'invalid' : $v.fio.$error }">-->
+<!--            <div class="form-group" :class="{ 'invalid': $v.fio.$error }">-->
+<!--                <label>Name</label>-->
+<!--                <input v-model.trim="$v.fio.$model"/>-->
+<!--            </div>-->
+<!--            <div class="error" v-if="!$v.fio.required">Field is required</div>-->
+<!--            <div class="error" v-if="!$v.fio.minLength">Name must have at least {{$v.fio.$params.minLength.min}} letters.</div>-->
+<!--        </div>-->
+            <br>
 <!--            <label for="status">Статус заявки</label>-->
 <!--            <select id="status" v-model="status">-->
 <!--                <option value="done">Завершен</option>-->
@@ -49,12 +40,23 @@
 
 <script>
   import { required, minLength, between, email } from 'vuelidate/lib/validators'
+  import FormField from './FormField';
 
   export default {
     name: "AppForm",
     data() {
       return {
         fio: '',
+        fioValidators: [
+          {
+            type: required,
+            description: 'Обязательное поле'
+          },
+          {
+            type: email,
+            description: 'Неверный формат'
+          },
+        ],
         phone: null,
         status: ''
       }
@@ -74,10 +76,11 @@
         console.log('Submit')
         console.log(this.$v.fio.$dirty)
 
-        if (this.$v.$invalid) {
+        this.$emit('check');
+        /*if (this.$v.$invalid) {
           this.$v.$touch()
           return
-        }
+        }*/
       },
       submit() {
         console.log('submit!')
@@ -92,6 +95,9 @@
           }, 500)
         }
       }
+    },
+    components: {
+      FormField
     }
   }
 </script>
