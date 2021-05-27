@@ -6,20 +6,20 @@
                :class="{'invalid' : $v.field.$error }">
         <small v-if="$v.field.$dirty && !$v.field.required"> Обязательное поле </small>
         <small v-if="$v.field.$dirty && !$v.field.email"> Вы ввели некорректный email </small>
-        {{$v.field.$error}}
     </div>
 </template>
 
 <script>
-  import * as vlidate from 'vuelidate/lib/validators'
-  // import {required} from 'vuelidate/lib/validators';
+  import * as validate from 'vuelidate/lib/validators'
+
 
   export default {
     name: "FormField",
     props: {
       // field: String,
       // value: String,
-      // validatorList: Array,
+      validatorList: Array,
+      v: Object
   // {
   //  type: email,
   //  description: 'Обязательное поле'
@@ -27,7 +27,7 @@
     },
     data() {
       return {
-        field: ''
+        field: '',
       }
     },
     methods: {
@@ -37,18 +37,51 @@
         this.$v.$touch()
       }
     },
-    created: function() {
-      this.$parent.$on('check', this.inputHandler);
+    computed: {
+      spliceValidators() {
+        console.log(this.validatorList)
+        return { ...this.validatorList }
+      },
     },
-    validations: {
+    created() {
+      this.$parent.$on('check', this.inputHandler);
+      console.log('Proverka', this.v?.$params)
+      console.log('Proverka', this.v)
+      // for (var prop in this.v) {
+      //   console.log("obj." + prop + " = " + this.v[prop]);
+      // }
+    },
+    validations: { // передавать объект пропсой и в computed парсить его на 2 поля
       field: {
-        required: vlidate['required'],
-        email: vlidate['email'],
+        required: validate['required'],
+        // email: vlidate['email'],
       }
     }
   }
 </script>
 
 <style scoped>
+    .form-control input,
+    .form-control select,
+    .form-control textarea{
+        font-family: Inter, Roboto, Oxygen, Fira Sans, Helvetica Neue, sans-serif;
+        margin: 0;
+        outline: none;
+        /*border: 2px solid #ccc;*/
+        display: block;
+        width: 90%;
+        color: #2c3e50;
+        padding: 0.5rem 1.5rem;
+        border-radius: 3px;
+        font-size: 1rem;
+        resize: none;
+    }
 
+    .form-control small {
+        color: #e53935;
+    }
+
+    .invalid {
+        border-color: #e53935;
+    }
 </style>

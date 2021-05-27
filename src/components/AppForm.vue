@@ -10,7 +10,7 @@
 <!--        </div>-->
             <br>
 
-        <FormField  :validator-list="fioValidators"></FormField>
+        <FormField  :validator-list="fioValidators" :v="$v.fio"></FormField>
         <FormField  :validator-list="fioValidators"></FormField>
 
             <br>
@@ -65,7 +65,6 @@
       fio: {
         required,
         email,
-        minLength: minLength(4)
       },
       phone: {
         minLength: minLength(6)
