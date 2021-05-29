@@ -1,11 +1,12 @@
 <template>
-    <div class="form-control" :class="{'invalid' : $v.field.$error }">
+    <div class="form-control" :class="{'invalid' : v.$error }">
         <label for="name">ФИО</label>
         <input type="text" ref="name"
                id="name" v-model="field"
-               :class="{'invalid' : $v.field.$error }">
-        <small v-if="$v.field.$dirty && !$v.field.required"> Обязательное поле </small>
-        <small v-if="$v.field.$dirty && !$v.field.email"> Вы ввели некорректный email </small>
+               :class="{'invalid' : v.$error }">
+        <small v-if="v.$dirty && !v.required"> Обязательное поле </small>
+        <small v-for="val in spliceValidators"> {{val.type}} </small>
+<!--        <small v-if="$v.field.$dirty && !$v.field.email"> Вы ввели некорректный email </small>-->
     </div>
 </template>
 
@@ -19,7 +20,10 @@
       // field: String,
       // value: String,
       validatorList: Array,
-      v: Object
+      v: {
+        type: Object,
+        requaired: true
+      }
   // {
   //  type: email,
   //  description: 'Обязательное поле'
@@ -34,29 +38,31 @@
       inputHandler(val) {
         // console.log(val.target.value)
         // this.$emit('input', val.target.value);
-        this.$v.$touch()
+        this.v.$touch()
       }
     },
     computed: {
       spliceValidators() {
-        console.log(this.validatorList)
-        return { ...this.validatorList }
+        const a = Object.keys(this.v?.$params);
+        a.forEach(e => console.log('val = ', this.v[e]))
+        const b = this.v;
+        console.log(a)
+        console.log(b)
+        return this.v?.$params
       },
     },
     created() {
       this.$parent.$on('check', this.inputHandler);
       console.log('Proverka', this.v?.$params)
-      console.log('Proverka', this.v)
       // for (var prop in this.v) {
       //   console.log("obj." + prop + " = " + this.v[prop]);
       // }
     },
-    validations: { // передавать объект пропсой и в computed парсить его на 2 поля
-      field: {
-        required: validate['required'],
-        // email: vlidate['email'],
-      }
-    }
+    // validations: { // передавать объект пропсой и в computed парсить его на 2 поля
+    //   field: {
+    //     required: validate['required'],
+    //   }
+    // }
   }
 </script>
 

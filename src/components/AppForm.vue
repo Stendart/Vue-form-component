@@ -11,7 +11,7 @@
             <br>
 
         <FormField  :validator-list="fioValidators" :v="$v.fio"></FormField>
-        <FormField  :validator-list="fioValidators"></FormField>
+        <FormField  :validator-list="fioValidators" :v="$v.phone"></FormField>
 
             <br>
             <br>
