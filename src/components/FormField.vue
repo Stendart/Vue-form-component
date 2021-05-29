@@ -1,47 +1,50 @@
 <template>
     <div class="form-control" :class="{'invalid' : v.$error }">
-        <label for="name">ФИО</label>
-        <input type="text" ref="name"
-               id="name" @input="setName($event.target.value)"
-               :class="{'invalid' : v.$error }">
-<!--        <small v-if="v.$dirty && !v.required"> Обязательное поле </small>-->
-<!--        <small v-if="!v.required"> Обязательное поле </small> {{v.required}}-->
-        <small v-for="val in spliceValidators" v-if="v.$dirty && getValidatorValue(val)"> {{val}} / {{getValidatorValue(val)}}</small>
+        <label>{{title}}
+            <input type="text"
+                   @input="inputHandler($event.target.value)"
+                   :class="{'invalid' : v.$error }">
+        </label>
+        <small v-for="val in spliceValidators"
+               v-if="v.$dirty && getValidatorValue(val)"> {{errorMessage(val)}} </small>
     </div>
 </template>
 
 <script>
 
+    const ERROR_MAP = {
+      required : 'Обязательное поле',
+      minLength : 'Слишком короткая запись',
+      email : 'Не корректно введён email',
+    }
+
   export default {
     name: "FormField",
     props: {
-      validatorList: Array,
       v: {
         type: Object,
         required: true
       },
-      test: {
-
+      title: {
+        type: String,
       }
     },
     data() {
       return {
-        field: '',
       }
     },
     methods: {
-      inputHandler() {
-        console.log(this.v)
+      checkValidation() {
         this.v.$touch()
       },
-      setName(val) {
+      inputHandler(val) {
         this.$emit('input', val)
       },
       getValidatorValue(validator) {
-        // if(validator === 'required') {
-        //   return !this.v[validator]
-        // }
         return !this.v[validator]
+      },
+      errorMessage(err) {
+        return ERROR_MAP[err]
       }
     },
     computed: {
@@ -51,8 +54,7 @@
       },
     },
     created() {
-      this.$parent.$on('check', this.inputHandler);
-      // console.log('Proverka', this.v?.$params)
+      this.$parent.$on('check', this.checkValidation);
     },
   }
 </script>

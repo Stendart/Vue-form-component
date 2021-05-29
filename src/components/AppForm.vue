@@ -10,8 +10,8 @@
 <!--        </div>-->
             <br>
 
-        <FormField  :validator-list="fioValidators" :v="$v.fio" v-model="fio"></FormField>
-        <FormField  :validator-list="fioValidators" :v="$v.phone" v-model="phone"></FormField>
+        <FormField :v="$v.fio" v-model="fio" :title="'Фамилия'"></FormField>
+        <FormField :v="$v.phone" v-model="phone" :title="'Имя'"></FormField>
 
             <br>
             <br>
@@ -47,16 +47,6 @@
     data() {
       return {
         fio: '',
-        fioValidators: [
-          {
-            type: required,
-            description: 'Обязательное поле'
-          },
-          {
-            type: email,
-            description: 'Неверный формат'
-          },
-        ],
         phone: null,
         status: ''
       }
@@ -67,7 +57,7 @@
         email,
       },
       phone: {
-        minLength: minLength(6)
+        minLength: minLength(6),
       }
     },
     methods: {
