@@ -10,8 +10,8 @@
 <!--        </div>-->
             <br>
 
-        <FormField  :validator-list="fioValidators" :v="$v.fio"></FormField>
-        <FormField  :validator-list="fioValidators" :v="$v.phone"></FormField>
+        <FormField  :validator-list="fioValidators" :v="$v.fio" v-model="fio"></FormField>
+        <FormField  :validator-list="fioValidators" :v="$v.phone" v-model="phone"></FormField>
 
             <br>
             <br>

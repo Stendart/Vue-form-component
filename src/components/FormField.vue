@@ -2,32 +2,27 @@
     <div class="form-control" :class="{'invalid' : v.$error }">
         <label for="name">ФИО</label>
         <input type="text" ref="name"
-               id="name" v-model="field"
+               id="name" @input="setName($event.target.value)"
                :class="{'invalid' : v.$error }">
-        <small v-if="v.$dirty && !v.required"> Обязательное поле </small>
-        <small v-for="val in spliceValidators"> {{val.type}} </small>
-<!--        <small v-if="$v.field.$dirty && !$v.field.email"> Вы ввели некорректный email </small>-->
+<!--        <small v-if="v.$dirty && !v.required"> Обязательное поле </small>-->
+<!--        <small v-if="!v.required"> Обязательное поле </small> {{v.required}}-->
+        <small v-for="val in spliceValidators" v-if="v.$dirty && getValidatorValue(val)"> {{val}} / {{getValidatorValue(val)}}</small>
     </div>
 </template>
 
 <script>
-  import * as validate from 'vuelidate/lib/validators'
-
 
   export default {
     name: "FormField",
     props: {
-      // field: String,
-      // value: String,
       validatorList: Array,
       v: {
         type: Object,
-        requaired: true
+        required: true
+      },
+      test: {
+
       }
-  // {
-  //  type: email,
-  //  description: 'Обязательное поле'
-  // }
     },
     data() {
       return {
@@ -35,34 +30,30 @@
       }
     },
     methods: {
-      inputHandler(val) {
-        // console.log(val.target.value)
-        // this.$emit('input', val.target.value);
+      inputHandler() {
+        console.log(this.v)
         this.v.$touch()
+      },
+      setName(val) {
+        this.$emit('input', val)
+      },
+      getValidatorValue(validator) {
+        // if(validator === 'required') {
+        //   return !this.v[validator]
+        // }
+        return !this.v[validator]
       }
     },
     computed: {
       spliceValidators() {
-        const a = Object.keys(this.v?.$params);
-        a.forEach(e => console.log('val = ', this.v[e]))
-        const b = this.v;
-        console.log(a)
-        console.log(b)
-        return this.v?.$params
+        const validatorArray = Object.keys(this.v?.$params);
+        return validatorArray
       },
     },
     created() {
       this.$parent.$on('check', this.inputHandler);
-      console.log('Proverka', this.v?.$params)
-      // for (var prop in this.v) {
-      //   console.log("obj." + prop + " = " + this.v[prop]);
-      // }
+      // console.log('Proverka', this.v?.$params)
     },
-    // validations: { // передавать объект пропсой и в computed парсить его на 2 поля
-    //   field: {
-    //     required: validate['required'],
-    //   }
-    // }
   }
 </script>
 
