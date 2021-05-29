@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <button class="btn" @click="isShowForm = true">Регистрация</button>
-    <appModal v-if="isShowForm" @close="isShowForm = false">
+    <appModal title="Форма создания клиента" v-if="isShowForm" @close="isShowForm = false">
       <AppForm></AppForm>
     </appModal>
     <img alt="Vue logo" src="./assets/logo.png">
@@ -31,9 +31,10 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /*text-align: center;*/
   color: #2c3e50;
   margin-top: 60px;
+
 }
 
 .btn {

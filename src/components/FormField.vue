@@ -1,7 +1,7 @@
 <template>
     <div class="form-control" :class="{'invalid' : v.$error }">
         <label>{{title}}
-            <input type="text"
+            <input type="text" class="form-control__input"
                    @input="inputHandler($event.target.value)"
                    :class="{'invalid' : v.$error }">
         </label>
@@ -60,20 +60,23 @@
 </script>
 
 <style scoped>
-    .form-control input,
-    .form-control select,
-    .form-control textarea{
-        font-family: Inter, Roboto, Oxygen, Fira Sans, Helvetica Neue, sans-serif;
+
+    .form-control {
+        width: 100%;
+    }
+
+    .form-control__input {
         margin: 0;
         outline: none;
-        /*border: 2px solid #ccc;*/
         display: block;
-        width: 90%;
+        width: 100%;
         color: #2c3e50;
-        padding: 0.5rem 1.5rem;
-        border-radius: 3px;
+        padding: 5px 10px;
+        border-radius: 25px;
         font-size: 1rem;
         resize: none;
+
+        box-sizing: border-box;
     }
 
     .form-control small {

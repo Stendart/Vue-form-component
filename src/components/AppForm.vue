@@ -1,30 +1,93 @@
 <template>
-    <form @submit.prevent="onSubmit">
-<!--        <div class="form-control" :class="{'invalid' : $v.fio.$error }">-->
-<!--            <label for="name">ФИО</label>-->
-<!--            <input type="text" ref="name"-->
-<!--                   id="name" v-model="fio"-->
-<!--                   :class="{'invalid' : $v.fio.$error }"-->
-<!--            <small v-if="$v.fio.$dirty && !$v.fio.required"> Обязательное поле </small>-->
-<!--            <small v-if="$v.fio.$dirty && !$v.fio.email"> Вы ввели некорректный email </small>-->
-<!--        </div>-->
-            <br>
+    <form @submit.prevent="onSubmit" class="form">
+        <div v-if="formPart === 1">
+            <div class="form__group">
+                <FormField class="mt" :v="$v.fio" v-model="fio" :title="'Фамилия*'"></FormField>
+                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Имя*'"></FormField>
+                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Отчество'"></FormField>
+            </div>
 
-        <FormField :v="$v.fio" v-model="fio" :title="'Фамилия'"></FormField>
-        <FormField :v="$v.phone" v-model="phone" :title="'Имя'"></FormField>
+            <div class="gender">
+                <label >Пол
+                    <div class="gender__radio">
+                        <p><input type="radio" name="gender" >Мужской</p>
+                        <p><input type="radio" name="gender" >Женский</p>
+                    </div>
+                </label>
+            </div>
+        </div>
 
-            <br>
-            <br>
-            <hr>
-<!--        <div class="form-control" :class="{'invalid' : $v.fio.$error }">-->
-<!--            <div class="form-group" :class="{ 'invalid': $v.fio.$error }">-->
-<!--                <label>Name</label>-->
-<!--                <input v-model.trim="$v.fio.$model"/>-->
-<!--            </div>-->
-<!--            <div class="error" v-if="!$v.fio.required">Field is required</div>-->
-<!--            <div class="error" v-if="!$v.fio.minLength">Name must have at least {{$v.fio.$params.minLength.min}} letters.</div>-->
-<!--        </div>-->
-            <br>
+
+
+
+
+        <div v-if="formPart === 2">
+            <div class="form__group">
+                <div>
+                    <label>Дата рождения*
+                        <input class="form__date" type="date">
+                    </label>
+                </div>
+                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Номер телефона'"></FormField>
+                <label class="mt">
+                    <input type="checkbox">Не отправлять СМС
+                </label>
+            </div>
+
+
+            <label>Группа клиентов*
+                <div>
+                    <select class="client__group" v-model="clientGroup" multiple size="3">
+                        <option value="vip">VIP</option>
+                        <option value="problem">Проблемные</option>
+                        <option value="omc">ОМС</option>
+                    </select>
+                </div>
+            </label>
+
+            <label>Лечащий врач
+                <div>
+                    <select class="select__group" v-model="doctor">
+                        <option value="done">Иванов</option>
+                        <option value="cancelled">Захаров</option>
+                        <option value="active">Чернышева</option>
+                    </select>
+                </div>
+            </label>
+        </div>
+
+
+
+
+        <div v-if="formPart === 3">
+            <fieldset>
+                <legend>Адрес:</legend>
+                <FormField :v="$v.phone" v-model="phone" :title="'Индекс'"></FormField>
+                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Страна'"></FormField>
+                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Город'"></FormField>
+                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Дом'"></FormField>
+            </fieldset>
+        </div>
+        <div v-if="formPart === 4">
+            <fieldset>
+                <legend>Паспорт:</legend>
+                <label>Тип документа*
+                    <div>
+                        <select class="select__group" v-model="doctor">
+                            <option value="done">Паспорт</option>
+                            <option value="cancelled">Свидетельство о рождении</option>
+                            <option value="active">Вод. удостоверение</option>
+                        </select>
+                    </div>
+                </label>
+                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Серия'"></FormField>
+                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Номер'"></FormField>
+                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Кем выдан'"></FormField>
+                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Дата выдачи*'"></FormField>
+            </fieldset>
+        </div>
+
+
 <!--            <label for="status">Статус заявки</label>-->
 <!--            <select id="status" v-model="status">-->
 <!--                <option value="done">Завершен</option>-->
@@ -33,7 +96,8 @@
 <!--                <option value="pending">Выполняется</option>-->
 <!--            </select>-->
 
-            <button type="submit" class="btn primary">Отправить</button>
+            <button v-if="formPart !== 4" @click="nextPatr" class="btn primary">Далее</button>
+            <button v-if="formPart === 4" type="submit" class="btn primary">Отправить</button>
 <!--        </div>-->
     </form>
 </template>
@@ -46,9 +110,11 @@
     name: "AppForm",
     data() {
       return {
+        formPart: 1,
         fio: '',
         phone: null,
-        status: ''
+        clientGroup: [],
+        doctor: ''
       }
     },
     validations: {
@@ -63,25 +129,16 @@
     methods: {
       onSubmit() {
         console.log('Submit')
-        console.log(this.$v.fio.$dirty)
 
-        this.$emit('check');
+        this.$emit('check')
         /*if (this.$v.$invalid) {
           this.$v.$touch()
           return
         }*/
       },
-      submit() {
-        console.log('submit!')
-        this.$v.$touch()
-        if (this.$v.$invalid) {
-          this.submitStatus = 'ERROR'
-        } else {
-          // do your submit logic here
-          this.submitStatus = 'PENDING'
-          setTimeout(() => {
-            this.submitStatus = 'OK'
-          }, 500)
+      nextPatr() {
+        if(this.formPart < 4) {
+          this.formPart++
         }
       }
     },
@@ -92,28 +149,71 @@
 </script>
 
 <style scoped>
+    .mt {
+        margin-top: 20px;
+    }
+    .form__group {
+        display: flex;
+        justify-content: space-between;
+        /*align-items: flex-end;*/
+        flex-direction: column;
+    }
 
-    .form-control input,
-    .form-control select,
-    .form-control textarea{
-        font-family: Inter, Roboto, Oxygen, Fira Sans, Helvetica Neue, sans-serif;
-        margin: 0;
-        outline: none;
-        /*border: 2px solid #ccc;*/
+    .gender {
+        width: 100%;
+        margin-top: 20px;
+    }
+    .gender__radio {
+        max-width: 300px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .client__group {
+        width: 100%;
+        border-radius: 10px;
+    }
+    .client__group option {
+        border: 1px solid black;
+        border-radius: 10px;
+        padding: 5px;
+    }
+    .select__group {
+        width: 100%;
+        padding: 5px;
+    }
+
+    .form__date {
+        box-sizing: border-box;
+
         display: block;
-        width: 90%;
-        color: #2c3e50;
-        padding: 0.5rem 1.5rem;
-        border-radius: 3px;
-        font-size: 1rem;
-        resize: none;
+        width: 100%;
+        height: 30px;
+
+        border-radius: 25px;
+        padding: 0 10px;
     }
 
-    .form-control small {
-        color: #e53935;
-    }
+    /*.form-control input,*/
+    /*.form-control select,*/
+    /*.form-control textarea{*/
+    /*    font-family: Inter, Roboto, Oxygen, Fira Sans, Helvetica Neue, sans-serif;*/
+    /*    margin: 0;*/
+    /*    outline: none;*/
+    /*    !*border: 2px solid #ccc;*!*/
+    /*    display: block;*/
+    /*    width: 90%;*/
+    /*    color: #2c3e50;*/
+    /*    padding: 0.5rem 1.5rem;*/
+    /*    border-radius: 3px;*/
+    /*    font-size: 1rem;*/
+    /*    resize: none;*/
+    /*}*/
 
-    .invalid {
-        border-color: #e53935;
-    }
+    /*.form-control small {*/
+    /*    color: #e53935;*/
+    /*}*/
+
+    /*.invalid {*/
+    /*    border-color: #e53935;*/
+    /*}*/
 </style>

@@ -19,16 +19,17 @@
 
 <style scoped>
     .modal {
-        position: fixed;
+        position: absolute;
         top: 60px;
-        width: 600px;
-        padding: 1rem;
+        width: 40%;
+        padding: 20px;
         background: #fff;
         z-index: 1000;
         left: 50%;
         border-radius: 10px;
         transform: translateX(-50%);
         box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.2);
+
     }
 
     .modal-backdrop {
