@@ -1,22 +1,23 @@
 <template>
-    <div class="form-control" :class="{'invalid' : v.$error }">
+    <div class="form-control">
         <label>{{title}}
             <input type="text" class="form-control__input"
                    @input="inputHandler($event.target.value)"
-                   :class="{'invalid' : v.$error }">
-        </label>
+                   @blur="v.$touch"
+                   :class="{'invalid' : (v.$dirty && v.$error) }">
+        </label>{{v.$dirty}}
         <small v-for="val in spliceValidators"
-               v-if="v.$dirty && getValidatorValue(val)"> {{errorMessage(val)}} </small>
+               v-if="v.$dirty && getValidatorValue(val)"> {{errorMessage(val)}}</small>
     </div>
 </template>
 
 <script>
-
-    const ERROR_MAP = {
-      required : 'Обязательное поле',
-      minLength : 'Слишком короткая запись',
-      email : 'Не корректно введён email',
-    }
+import {ERROR_MAP} from './errorMap'
+    // const ERROR_MAP = {
+    //   required : 'Обязательное поле',
+    //   minLength : 'Слишком короткая запись',
+    //   email : 'Не корректно введён email',
+    // }
 
   export default {
     name: "FormField",
@@ -81,6 +82,7 @@
 
     .form-control small {
         color: #e53935;
+        display: block;
     }
 
     .invalid {

@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="onSubmit" class="form">
-        <div v-if="formPart === 1">
+        <div v-if="formPart === 1" :key="1">
             <div class="form__group">
                 <FormField class="mt" :v="$v.surName" v-model="surName" :title="'Фамилия*'"></FormField>
                 <FormField class="mt" :v="$v.name" v-model="name" :title="'Имя*'"></FormField>
@@ -16,14 +16,14 @@
             </div>
         </div>
 
-        <div v-if="formPart === 2">
+        <div v-if="formPart === 2" :key="2">
             <div class="form__group">
                 <div>
                     <label>Дата рождения*
                         <input class="form__date" type="date" v-model="birthDate">
                     </label>
                 </div>
-                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Номер телефона'"></FormField>
+                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Номер телефона*'"></FormField>
                 <label >
                     <input type="checkbox">Не отправлять СМС
                 </label>
@@ -52,7 +52,7 @@
             </div>
         </div>
 
-        <div v-if="formPart === 3">
+        <div v-if="formPart === 3" :key="3">
             <fieldset>
                 <legend>Адрес:</legend>
                 <FormField :v="$v.index" v-model="index" :title="'Индекс'"></FormField>
@@ -64,7 +64,7 @@
             </fieldset>
         </div>
 
-        <div v-if="formPart === 4">
+        <div v-if="formPart === 4" :key="4">
             <fieldset>
                 <legend>Паспорт:</legend>
                 <label>Тип документа*
@@ -84,7 +84,8 @@
         </div>
 
         <div class="mt">
-            <button v-if="formPart !== 4" @click="nextPatr" class="btn primary">Далее</button>
+            <button v-if="formPart > 1" @click="formPart--" type="button" class="btn primary">Назад</button>
+            <button v-if="formPart < 4" @click="formPart++" type="button" class="btn primary">Далее</button>
             <button v-if="formPart === 4" type="submit" class="btn primary">Отправить</button>
         </div>
 
@@ -92,13 +93,13 @@
 </template>
 
 <script>
-  import { required, alpha, minLength, maxLength, alphaNum, numeric, email, helpers } from 'vuelidate/lib/validators'
+  import { required,  minLength, maxLength, numeric, email, helpers } from 'vuelidate/lib/validators'
   import FormField from './FormField';
 
-  const checkFirstPhoneNum = (number) => {
-    console.log('num = ', number)
-    return !helpers.req(number) || number.toString()[0] === '7'
-  }
+  const checkFirstPhoneNum = (number) =>  !helpers.req(number) || number.toString()[0] === '7'
+
+  const alpha = helpers.regex('alpha', /^[а-яА-Яa-zA-Z]*$/)
+  const alphaNum = helpers.regex('alphaNum', /^[а-яА-Яa-zA-Z0-9]*$/)
 
   export default {
     name: "AppForm",
@@ -106,14 +107,13 @@
       return {
         formPart: 1,
 
-        fio: '',
         name: '',
         surName: '',
         patronymic: '',
         gender: '',
 
         birthDate: '',
-        phone: undefined,
+        phone: null,
         isSendMessage: false,
         clientGroup: [],
         doctor: '',
@@ -133,10 +133,6 @@
       }
     },
     validations: {
-      fio: {
-        required,
-        email,
-      },
       name: {
         required,
         alpha
@@ -211,11 +207,6 @@
           return
         }*/
       },
-      nextPatr() {
-        if(this.formPart < 4) {
-          this.formPart++
-        }
-      }
     },
     components: {
       FormField
