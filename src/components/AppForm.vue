@@ -2,119 +2,134 @@
     <form @submit.prevent="onSubmit" class="form">
         <div v-if="formPart === 1">
             <div class="form__group">
-                <FormField class="mt" :v="$v.fio" v-model="fio" :title="'Фамилия*'"></FormField>
-                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Имя*'"></FormField>
-                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Отчество'"></FormField>
+                <FormField class="mt" :v="$v.surName" v-model="surName" :title="'Фамилия*'"></FormField>
+                <FormField class="mt" :v="$v.name" v-model="name" :title="'Имя*'"></FormField>
+                <FormField class="mt" :v="$v.patronymic" v-model="patronymic" :title="'Отчество'"></FormField>
             </div>
-
             <div class="gender">
-                <label >Пол
+                <label>Пол
                     <div class="gender__radio">
-                        <p><input type="radio" name="gender" >Мужской</p>
-                        <p><input type="radio" name="gender" >Женский</p>
+                        <p><input type="radio" name="gender" value="Мужской" v-model="gender">Мужской</p>
+                        <p><input type="radio" name="gender" value="Женский" v-model="gender">Женский</p>
                     </div>
                 </label>
             </div>
         </div>
 
-
-
-
-
         <div v-if="formPart === 2">
             <div class="form__group">
                 <div>
                     <label>Дата рождения*
-                        <input class="form__date" type="date">
+                        <input class="form__date" type="date" v-model="birthDate">
                     </label>
                 </div>
                 <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Номер телефона'"></FormField>
-                <label class="mt">
+                <label >
                     <input type="checkbox">Не отправлять СМС
                 </label>
             </div>
-
-
-            <label>Группа клиентов*
-                <div>
-                    <select class="client__group" v-model="clientGroup" multiple size="3">
-                        <option value="vip">VIP</option>
-                        <option value="problem">Проблемные</option>
-                        <option value="omc">ОМС</option>
-                    </select>
-                </div>
-            </label>
-
-            <label>Лечащий врач
-                <div>
-                    <select class="select__group" v-model="doctor">
-                        <option value="done">Иванов</option>
-                        <option value="cancelled">Захаров</option>
-                        <option value="active">Чернышева</option>
-                    </select>
-                </div>
-            </label>
+            <div class="mt">
+                <label>Группа клиентов*
+                    <div>
+                        <select class="client__group" v-model="clientGroup" multiple size="3">
+                            <option value="vip">VIP</option>
+                            <option value="problem">Проблемные</option>
+                            <option value="omc">ОМС</option>
+                        </select>
+                    </div>
+                </label>
+            </div>
+            <div class="mt">
+                <label>Лечащий врач
+                    <div>
+                        <select class="select__group" v-model="doctor">
+                            <option value="done">Иванов</option>
+                            <option value="cancelled">Захаров</option>
+                            <option value="active">Чернышева</option>
+                        </select>
+                    </div>
+                </label>
+            </div>
         </div>
-
-
-
 
         <div v-if="formPart === 3">
             <fieldset>
                 <legend>Адрес:</legend>
-                <FormField :v="$v.phone" v-model="phone" :title="'Индекс'"></FormField>
-                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Страна'"></FormField>
-                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Город'"></FormField>
-                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Дом'"></FormField>
+                <FormField :v="$v.index" v-model="index" :title="'Индекс'"></FormField>
+                <FormField class="mt" :v="$v.country" v-model="country" :title="'Страна'"></FormField>
+                <FormField class="mt" :v="$v.region" v-model="region" :title="'Область'"></FormField>
+                <FormField class="mt" :v="$v.city" v-model="city" :title="'Город'"></FormField>
+                <FormField class="mt" :v="$v.street" v-model="street" :title="'Улица'"></FormField>
+                <FormField class="mt" :v="$v.house" v-model="house" :title="'Дом'"></FormField>
             </fieldset>
         </div>
+
         <div v-if="formPart === 4">
             <fieldset>
                 <legend>Паспорт:</legend>
                 <label>Тип документа*
                     <div>
-                        <select class="select__group" v-model="doctor">
+                        <select class="select__group" v-model="documentType">
                             <option value="done">Паспорт</option>
                             <option value="cancelled">Свидетельство о рождении</option>
                             <option value="active">Вод. удостоверение</option>
                         </select>
                     </div>
                 </label>
-                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Серия'"></FormField>
-                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Номер'"></FormField>
-                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Кем выдан'"></FormField>
-                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Дата выдачи*'"></FormField>
+                <FormField class="mt" :v="$v.documentSeries" v-model="documentSeries" :title="'Серия'"></FormField>
+                <FormField class="mt" :v="$v.documentNumber" v-model="documentNumber" :title="'Номер'"></FormField>
+                <FormField class="mt" :v="$v.documentIssued" v-model="documentIssued" :title="'Кем выдан'"></FormField>
+                <FormField class="mt" :v="$v.documentDate" v-model="documentDate" :title="'Дата выдачи*'"></FormField>
             </fieldset>
         </div>
 
-
-<!--            <label for="status">Статус заявки</label>-->
-<!--            <select id="status" v-model="status">-->
-<!--                <option value="done">Завершен</option>-->
-<!--                <option value="cancelled">Отменён</option>-->
-<!--                <option value="active">Активен</option>-->
-<!--                <option value="pending">Выполняется</option>-->
-<!--            </select>-->
-
+        <div class="mt">
             <button v-if="formPart !== 4" @click="nextPatr" class="btn primary">Далее</button>
             <button v-if="formPart === 4" type="submit" class="btn primary">Отправить</button>
-<!--        </div>-->
+        </div>
+
     </form>
 </template>
 
 <script>
-  import { required, minLength, between, email } from 'vuelidate/lib/validators'
+  import { required, alpha, minLength, maxLength, alphaNum, numeric, email, helpers } from 'vuelidate/lib/validators'
   import FormField from './FormField';
+
+  const checkFirstPhoneNum = (number) => {
+    console.log('num = ', number)
+    return !helpers.req(number) || number.toString()[0] === '7'
+  }
 
   export default {
     name: "AppForm",
     data() {
       return {
         formPart: 1,
+
         fio: '',
-        phone: null,
+        name: '',
+        surName: '',
+        patronymic: '',
+        gender: '',
+
+        birthDate: '',
+        phone: undefined,
+        isSendMessage: false,
         clientGroup: [],
-        doctor: ''
+        doctor: '',
+
+        index: '',
+        country: '',
+        region: '',
+        city: '',
+        street: '',
+        house: '',
+
+        documentType: '',
+        documentSeries: '',
+        documentNumber: '',
+        documentIssued: '',
+        documentDate: ''
       }
     },
     validations: {
@@ -122,8 +137,68 @@
         required,
         email,
       },
+      name: {
+        required,
+        alpha
+      },
+      surName: {
+        required,
+        alpha
+      },
+      patronymic: {
+        alpha
+      },
+      gender: {},
+
+      birthDate: {
+        required,
+        maxValue: new Date().toLocaleDateString()
+      },
       phone: {
-        minLength: minLength(6),
+        required,
+        minLength: minLength(11),
+        maxLength: maxLength(11),
+        numeric,
+        checkFirstPhoneNum
+      },
+      isSendMessage: {},
+      clientGroup: {
+        required,
+      },
+      doctor: {},
+
+      index: {
+        numeric
+      },
+      country: {
+        alpha
+      },
+      region: {
+        alphaNum
+      },
+      city: {
+        required,
+        alphaNum
+      },
+      street: {
+        alphaNum
+      },
+      house: {},
+
+      documentType: {
+        required,
+      },
+      documentSeries: {
+        alpha
+      },
+      documentNumber: {
+        numeric
+      },
+      documentIssued: {
+        alphaNum
+      },
+      documentDate: {
+        required,
       }
     },
     methods: {
@@ -180,6 +255,8 @@
     .select__group {
         width: 100%;
         padding: 5px;
+        border-radius: 25px;
+        outline: none;
     }
 
     .form__date {
@@ -191,29 +268,6 @@
 
         border-radius: 25px;
         padding: 0 10px;
+        outline: none;
     }
-
-    /*.form-control input,*/
-    /*.form-control select,*/
-    /*.form-control textarea{*/
-    /*    font-family: Inter, Roboto, Oxygen, Fira Sans, Helvetica Neue, sans-serif;*/
-    /*    margin: 0;*/
-    /*    outline: none;*/
-    /*    !*border: 2px solid #ccc;*!*/
-    /*    display: block;*/
-    /*    width: 90%;*/
-    /*    color: #2c3e50;*/
-    /*    padding: 0.5rem 1.5rem;*/
-    /*    border-radius: 3px;*/
-    /*    font-size: 1rem;*/
-    /*    resize: none;*/
-    /*}*/
-
-    /*.form-control small {*/
-    /*    color: #e53935;*/
-    /*}*/
-
-    /*.invalid {*/
-    /*    border-color: #e53935;*/
-    /*}*/
 </style>

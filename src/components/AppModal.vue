@@ -29,7 +29,12 @@
         border-radius: 10px;
         transform: translateX(-50%);
         box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.2);
+    }
 
+    @media(max-width: 550px) {
+        .modal {
+            width: 70%;
+        }
     }
 
     .modal-backdrop {
