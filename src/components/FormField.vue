@@ -5,7 +5,7 @@
                    @input="inputHandler($event.target.value)"
                    @blur="v.$touch"
                    :class="{'invalid' : (v.$dirty && v.$error) }">
-        </label>{{v.$dirty}}
+        </label>
         <small v-for="val in spliceValidators"
                v-if="v.$dirty && getValidatorValue(val)"> {{errorMessage(val)}}</small>
     </div>
@@ -37,6 +37,7 @@ import {ERROR_MAP} from './errorMap'
     methods: {
       checkValidation() {
         this.v.$touch()
+        console.log('validation is coming')
       },
       inputHandler(val) {
         this.$emit('input', val)

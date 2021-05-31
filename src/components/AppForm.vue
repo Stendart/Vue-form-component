@@ -22,6 +22,7 @@
                     <label>Дата рождения*
                         <input class="form__date" type="date" v-model="birthDate">
                     </label>
+                    <small v-if="isTouch && !$v.birthDate.required">{{errorMessage('required')}}</small>
                 </div>
                 <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Номер телефона*'"></FormField>
                 <label >
@@ -31,13 +32,14 @@
             <div class="mt">
                 <label>Группа клиентов*
                     <div>
-                        <select class="client__group" v-model="clientGroup" multiple size="3">
+                        <select class="client__group" v-model="clientGroup" @blur="$v.clientGroup.$touch" multiple size="3">
                             <option value="vip">VIP</option>
                             <option value="problem">Проблемные</option>
                             <option value="omc">ОМС</option>
                         </select>
                     </div>
-                </label>
+                </label>проверка
+                <small v-if="$v.clientGroup.$dirty && !$v.clientGroup.required"> {{errorMessage('required')}}</small>
             </div>
             <div class="mt">
                 <label>Лечащий врач
@@ -84,9 +86,9 @@
         </div>
 
         <div class="mt">
-            <button v-if="formPart > 1" @click="formPart--" type="button" class="btn primary">Назад</button>
-            <button v-if="formPart < 4" @click="formPart++" type="button" class="btn primary">Далее</button>
-            <button v-if="formPart === 4" type="submit" class="btn primary">Отправить</button>
+            <button :disabled="!(formPart > 1)" @click="formPart--" type="button" class="btn primary">Назад</button>
+            <button :disabled="!(formPart < 4)" @click="formPart++" type="button" class="btn primary">Далее</button>
+            <button :disabled="formPart !== 4" type="submit" class="btn primary">Отправить</button>
         </div>
 
     </form>
@@ -95,6 +97,7 @@
 <script>
   import { required,  minLength, maxLength, numeric, email, helpers } from 'vuelidate/lib/validators'
   import FormField from './FormField';
+  import {ERROR_MAP} from './errorMap'
 
   const checkFirstPhoneNum = (number) =>  !helpers.req(number) || number.toString()[0] === '7'
 
@@ -106,6 +109,7 @@
     data() {
       return {
         formPart: 1,
+        isTouch: false,
 
         name: '',
         surName: '',
@@ -198,8 +202,15 @@
       }
     },
     methods: {
-      onSubmit() {
+      onSubmit() { // $v.form.$invalid  or $v.form.$error
         console.log('Submit')
+        this.$v.clientGroup.$touch()
+        this.customTouch();
+        //this.$v.birthDate.$touch() //!!!!!
+        // for(let i in this.$v.$params) {
+        //   console.log(i, '= ', this.$v.$params[i])
+        //   console.log(this.$v[i].$each)
+        // }
 
         this.$emit('check')
         /*if (this.$v.$invalid) {
@@ -207,6 +218,12 @@
           return
         }*/
       },
+      errorMessage(err) {
+        return ERROR_MAP[err]
+      },
+      customTouch() {
+        this.isTouch = true
+      }
     },
     components: {
       FormField
@@ -260,5 +277,9 @@
         border-radius: 25px;
         padding: 0 10px;
         outline: none;
+    }
+    small {
+        color: #e53935;
+        display: block;
     }
 </style>
