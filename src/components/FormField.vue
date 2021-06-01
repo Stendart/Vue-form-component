@@ -3,7 +3,8 @@
         <label>{{title}}
             <input type="text" class="form-control__input"
                    @input="inputHandler($event.target.value)"
-                   @blur="v.$touch"
+                   :value="value"
+                   @blur="v.$touch()"
                    :class="{'invalid' : (v.$dirty && v.$error) }">
         </label>
         <small v-for="val in spliceValidators"
@@ -24,11 +25,11 @@ import {ERROR_MAP} from './errorMap'
     props: {
       v: {
         type: Object,
-        required: true
       },
       title: {
         type: String,
-      }
+      },
+      value:{}
     },
     data() {
       return {
@@ -37,7 +38,6 @@ import {ERROR_MAP} from './errorMap'
     methods: {
       checkValidation() {
         this.v.$touch()
-        console.log('validation is coming')
       },
       inputHandler(val) {
         this.$emit('input', val)
@@ -51,7 +51,7 @@ import {ERROR_MAP} from './errorMap'
     },
     computed: {
       spliceValidators() {
-        const validatorArray = Object.keys(this.v?.$params);
+        const validatorArray = Object.keys(this.v?.$params)
         return validatorArray
       },
     },

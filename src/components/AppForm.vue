@@ -3,7 +3,7 @@
         <div v-if="formPart === 1" :key="1">
             <div class="form__group">
                 <FormField class="mt" :v="$v.surName" v-model="surName" :title="'Фамилия*'"></FormField>
-                <FormField class="mt" :v="$v.name" v-model="name" :title="'Имя*'"></FormField>
+                <FormField class="mt" :v="$v.firstName" v-model="firstName" :title="'Имя*'"></FormField>
                 <FormField class="mt" :v="$v.patronymic" v-model="patronymic" :title="'Отчество'"></FormField>
             </div>
             <div class="gender">
@@ -38,7 +38,7 @@
                             <option value="omc">ОМС</option>
                         </select>
                     </div>
-                </label>проверка
+                </label>
                 <small v-if="$v.clientGroup.$dirty && !$v.clientGroup.required"> {{errorMessage('required')}}</small>
             </div>
             <div class="mt">
@@ -88,14 +88,14 @@
         <div class="mt">
             <button :disabled="!(formPart > 1)" @click="formPart--" type="button" class="btn primary">Назад</button>
             <button :disabled="!(formPart < 4)" @click="formPart++" type="button" class="btn primary">Далее</button>
-            <button :disabled="formPart !== 4" type="submit" class="btn primary">Отправить</button>
+            <button :disabled="false" type="submit" class="btn primary">Отправить</button>
         </div>
 
     </form>
 </template>
 
 <script>
-  import { required,  minLength, maxLength, numeric, email, helpers } from 'vuelidate/lib/validators'
+  import { required,  minLength, maxLength, numeric, helpers } from 'vuelidate/lib/validators'
   import FormField from './FormField';
   import {ERROR_MAP} from './errorMap'
 
@@ -111,7 +111,7 @@
         formPart: 1,
         isTouch: false,
 
-        name: '',
+        firstName: '',
         surName: '',
         patronymic: '',
         gender: '',
@@ -137,7 +137,7 @@
       }
     },
     validations: {
-      name: {
+      firstName: {
         required,
         alpha
       },
@@ -204,13 +204,14 @@
     methods: {
       onSubmit() { // $v.form.$invalid  or $v.form.$error
         console.log('Submit')
+        // console.log('data', this.$data)
+        console.log('$invalid', this.$v.$invalid)
+        console.log('$error', this.$v.$error)
+        console.log('$error firstName', this.$v.firstName.$error)
+        console.log('$error phone', this.$v.phone.$error)
+        // console.log('$anyError', this.$v.$anyError)
         this.$v.clientGroup.$touch()
         this.customTouch();
-        //this.$v.birthDate.$touch() //!!!!!
-        // for(let i in this.$v.$params) {
-        //   console.log(i, '= ', this.$v.$params[i])
-        //   console.log(this.$v[i].$each)
-        // }
 
         this.$emit('check')
         /*if (this.$v.$invalid) {
@@ -238,7 +239,6 @@
     .form__group {
         display: flex;
         justify-content: space-between;
-        /*align-items: flex-end;*/
         flex-direction: column;
     }
 
