@@ -1,11 +1,10 @@
 <template>
   <div id="app">
-    <button class="btn" @click="openModal">Регистрация</button>
+    <button class="btn center" @click="openModal">Регистрация</button>
     <appModal title="Форма создания клиента" v-if="isShowModal" @close="closeModal">
       <AppForm @completedForm="completedForm" v-if="isShowForm"></AppForm>
       <AppMessage v-if="!isShowForm"></AppMessage>
     </appModal>
-    <img alt="Vue logo" src="./assets/logo.png">
   </div>
 </template>
 
@@ -48,7 +47,6 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /*text-align: center;*/
   color: #2c3e50;
   margin-top: 60px;
 
@@ -89,5 +87,10 @@ export default {
 
 .btn:active {
   box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.center {
+    display: block;
+    margin: 0 auto;
 }
 </style>

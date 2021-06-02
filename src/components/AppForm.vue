@@ -77,21 +77,28 @@
                             <option value="cancelled">Свидетельство о рождении</option>
                             <option value="active">Вод. удостоверение</option>
                         </select>
+                        <small v-if="isTouch && !$v.form.documentType.required"> {{errorMessage('required')}}</small>
                     </div>
                 </label>
                 <FormField class="mt" :v="$v.form.documentSeries" v-model="form.documentSeries" :title="'Серия'"></FormField>
                 <FormField class="mt" :v="$v.form.documentNumber" v-model="form.documentNumber" :title="'Номер'"></FormField>
                 <FormField class="mt" :v="$v.form.documentIssued" v-model="form.documentIssued" :title="'Кем выдан'"></FormField>
-                <FormField class="mt" :v="$v.form.documentDate" v-model="form.documentDate" :title="'Дата выдачи*'"></FormField>
+<!--                <FormField class="mt" :v="$v.form.documentDate" v-model="form.documentDate" :title="'Дата выдачи*'"></FormField>-->
+                <div class="mt">
+                    <label>Дата выдачи*
+                        <input class="form__date" type="date" v-model="form.documentDate">
+                    </label>
+                    <small v-if="isTouch && !$v.form.documentDate.required"> Обязательное поле </small>
+                    <small v-else-if="isTouch && !$v.form.documentDate.maxValue"> Дата не может быть выше текущей </small>
+                </div>
             </fieldset>
         </div>
 
         <div class="mt">
             <button :disabled="!(formPart > 1)" @click="formPart--" type="button" class="btn primary">Назад</button>
             <button :disabled="!(formPart < 4)" @click="formPart++" type="button" class="btn primary">Далее</button>
-            <button :disabled="false" type="submit" class="btn primary">Отправить</button>
+            <button :disabled="formPart !== 4" type="submit" class="btn primary">Отправить</button>
         </div>
-
     </form>
 </template>
 
@@ -212,24 +219,16 @@
           alphaNum
         },
         documentDate: {
-          required,
+          required: customRequired,
+          maxValue: customMaxDate
         }
       }
 
     },
     methods: {
-      onSubmit() { // $v.form.$invalid  or $v.form.$error
-        console.log('Submit')
-        // console.log('data', this.$data)
-
-        // console.log('$invalid', this.$v.form.$invalid)
-        // console.log('$error', this.$v.$error)
-        // console.log('$error firstName', this.$v.form.firstName.$error)
-        // console.log('$error phone', this.$v.form.phone.$error)
-        // console.log('$anyError', this.$v.$anyError)
+      onSubmit() {
         this.$v.form.clientGroup.$touch()
         this.customTouch()
-        console.log('$invalid', this.$v.form.$invalid)
         this.$emit('check')
 
         if (!this.$v.$invalid) {
@@ -242,18 +241,6 @@
       customTouch() {
         this.isTouch = true
       },
-      // customRequired(val) {
-      //   if(typeof val === 'string')
-      //       return val.length !== 0
-      // },
-      // customMaxDate(date) {
-      //   return new Date(date) < new Date()
-      // },
-      // validateData(date) {
-      //   console.log('$v.birthDate')
-      //   console.log('$v.birthDate', this.$v.form.birthDate)
-      //   return this.customRequired(date) && this.customMaxDate(date)
-      // }
     },
     components: {
       FormField
