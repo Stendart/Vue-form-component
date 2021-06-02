@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-    <button class="btn" @click="isShowForm = true">Регистрация</button>
-    <appModal title="Форма создания клиента" v-if="isShowForm" @close="isShowForm = false">
-      <AppForm></AppForm>
+    <button class="btn" @click="openModal">Регистрация</button>
+    <appModal title="Форма создания клиента" v-if="isShowModal" @close="closeModal">
+      <AppForm @completedForm="completedForm" v-if="isShowForm"></AppForm>
+      <AppMessage v-if="!isShowForm"></AppMessage>
     </appModal>
     <img alt="Vue logo" src="./assets/logo.png">
   </div>
@@ -11,17 +12,33 @@
 <script>
 import AppModal from './components/AppModal';
 import AppForm from './components/AppForm';
+import AppMessage from './components/AppMessage';
 
 export default {
   name: 'App',
   data() {
     return {
-      isShowForm: false
+      isShowForm: false,
+      isShowModal: false
+    }
+  },
+  methods: {
+    completedForm() {
+      this.isShowForm = false
+    },
+    closeModal() {
+      this.isShowForm = false
+      this.isShowModal = false
+    },
+    openModal() {
+      this.isShowForm = true
+      this.isShowModal = true
     }
   },
   components: {
     AppModal,
-    AppForm
+    AppForm,
+    AppMessage
   }
 }
 </script>

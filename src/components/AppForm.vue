@@ -2,15 +2,15 @@
     <form @submit.prevent="onSubmit" class="form">
         <div v-if="formPart === 1" :key="1">
             <div class="form__group">
-                <FormField class="mt" :v="$v.surName" v-model="surName" :title="'Фамилия*'"></FormField>
-                <FormField class="mt" :v="$v.firstName" v-model="firstName" :title="'Имя*'"></FormField>
-                <FormField class="mt" :v="$v.patronymic" v-model="patronymic" :title="'Отчество'"></FormField>
+                <FormField class="mt" :v="$v.form.surName" v-model="form.surName" :title="'Фамилия*'"></FormField>
+                <FormField class="mt" :v="$v.form.firstName" v-model="form.firstName" :title="'Имя*'"></FormField>
+                <FormField class="mt" :v="$v.form.patronymic" v-model="form.patronymic" :title="'Отчество'"></FormField>
             </div>
             <div class="gender">
                 <label>Пол
                     <div class="gender__radio">
-                        <p><input type="radio" name="gender" value="Мужской" v-model="gender">Мужской</p>
-                        <p><input type="radio" name="gender" value="Женский" v-model="gender">Женский</p>
+                        <p><input type="radio" name="gender" value="Мужской" v-model="form.gender">Мужской</p>
+                        <p><input type="radio" name="gender" value="Женский" v-model="form.gender">Женский</p>
                     </div>
                 </label>
             </div>
@@ -20,11 +20,12 @@
             <div class="form__group">
                 <div>
                     <label>Дата рождения*
-                        <input class="form__date" type="date" v-model="birthDate">
+                        <input class="form__date" type="date" v-model="form.birthDate">
                     </label>
-                    <small v-if="isTouch && !$v.birthDate.required">{{errorMessage('required')}}</small>
+                    <small v-if="isTouch && !$v.form.birthDate.required"> Обязательное поле </small>
+                    <small v-else-if="isTouch && !$v.form.birthDate.maxValue"> Дата не может быть выше текущей </small>
                 </div>
-                <FormField class="mt" :v="$v.phone" v-model="phone" :title="'Номер телефона*'"></FormField>
+                <FormField class="mt" :v="$v.form.phone" v-model="form.phone" :title="'Номер телефона*'"></FormField>
                 <label >
                     <input type="checkbox">Не отправлять СМС
                 </label>
@@ -32,19 +33,19 @@
             <div class="mt">
                 <label>Группа клиентов*
                     <div>
-                        <select class="client__group" v-model="clientGroup" @blur="$v.clientGroup.$touch" multiple size="3">
+                        <select class="client__group" v-model="form.clientGroup" @blur="$v.form.clientGroup.$touch" multiple size="3">
                             <option value="vip">VIP</option>
                             <option value="problem">Проблемные</option>
                             <option value="omc">ОМС</option>
                         </select>
                     </div>
                 </label>
-                <small v-if="$v.clientGroup.$dirty && !$v.clientGroup.required"> {{errorMessage('required')}}</small>
+                <small v-if="$v.form.clientGroup.$dirty && !$v.form.clientGroup.required"> {{errorMessage('required')}}</small>
             </div>
             <div class="mt">
                 <label>Лечащий врач
                     <div>
-                        <select class="select__group" v-model="doctor">
+                        <select class="select__group" v-model="form.doctor">
                             <option value="done">Иванов</option>
                             <option value="cancelled">Захаров</option>
                             <option value="active">Чернышева</option>
@@ -57,12 +58,12 @@
         <div v-if="formPart === 3" :key="3">
             <fieldset>
                 <legend>Адрес:</legend>
-                <FormField :v="$v.index" v-model="index" :title="'Индекс'"></FormField>
-                <FormField class="mt" :v="$v.country" v-model="country" :title="'Страна'"></FormField>
-                <FormField class="mt" :v="$v.region" v-model="region" :title="'Область'"></FormField>
-                <FormField class="mt" :v="$v.city" v-model="city" :title="'Город'"></FormField>
-                <FormField class="mt" :v="$v.street" v-model="street" :title="'Улица'"></FormField>
-                <FormField class="mt" :v="$v.house" v-model="house" :title="'Дом'"></FormField>
+                <FormField :v="$v.form.index" v-model="form.index" :title="'Индекс'"></FormField>
+                <FormField class="mt" :v="$v.form.country" v-model="form.country" :title="'Страна'"></FormField>
+                <FormField class="mt" :v="$v.form.region" v-model="form.region" :title="'Область'"></FormField>
+                <FormField class="mt" :v="$v.form.city" v-model="form.city" :title="'Город*'"></FormField>
+                <FormField class="mt" :v="$v.form.street" v-model="form.street" :title="'Улица'"></FormField>
+                <FormField class="mt" :v="$v.form.house" v-model="form.house" :title="'Дом'"></FormField>
             </fieldset>
         </div>
 
@@ -71,17 +72,17 @@
                 <legend>Паспорт:</legend>
                 <label>Тип документа*
                     <div>
-                        <select class="select__group" v-model="documentType">
+                        <select class="select__group" v-model="form.documentType">
                             <option value="done">Паспорт</option>
                             <option value="cancelled">Свидетельство о рождении</option>
                             <option value="active">Вод. удостоверение</option>
                         </select>
                     </div>
                 </label>
-                <FormField class="mt" :v="$v.documentSeries" v-model="documentSeries" :title="'Серия'"></FormField>
-                <FormField class="mt" :v="$v.documentNumber" v-model="documentNumber" :title="'Номер'"></FormField>
-                <FormField class="mt" :v="$v.documentIssued" v-model="documentIssued" :title="'Кем выдан'"></FormField>
-                <FormField class="mt" :v="$v.documentDate" v-model="documentDate" :title="'Дата выдачи*'"></FormField>
+                <FormField class="mt" :v="$v.form.documentSeries" v-model="form.documentSeries" :title="'Серия'"></FormField>
+                <FormField class="mt" :v="$v.form.documentNumber" v-model="form.documentNumber" :title="'Номер'"></FormField>
+                <FormField class="mt" :v="$v.form.documentIssued" v-model="form.documentIssued" :title="'Кем выдан'"></FormField>
+                <FormField class="mt" :v="$v.form.documentDate" v-model="form.documentDate" :title="'Дата выдачи*'"></FormField>
             </fieldset>
         </div>
 
@@ -104,6 +105,15 @@
   const alpha = helpers.regex('alpha', /^[а-яА-Яa-zA-Z]*$/)
   const alphaNum = helpers.regex('alphaNum', /^[а-яА-Яa-zA-Z0-9]*$/)
 
+  const customRequired = (val) => {
+    if(typeof val === 'string')
+      return val.length !== 0
+  }
+
+  const customMaxDate = (date) => {
+    return new Date(date) < new Date()
+  }
+
   export default {
     name: "AppForm",
     data() {
@@ -111,120 +121,139 @@
         formPart: 1,
         isTouch: false,
 
-        firstName: '',
-        surName: '',
-        patronymic: '',
-        gender: '',
+        form: {
+          firstName: '',
+          surName: '',
+          patronymic: '',
+          gender: '',
 
-        birthDate: '',
-        phone: null,
-        isSendMessage: false,
-        clientGroup: [],
-        doctor: '',
+          birthDate: '',
+          phone: null,
+          isSendMessage: false,
+          clientGroup: [],
+          doctor: '',
 
-        index: '',
-        country: '',
-        region: '',
-        city: '',
-        street: '',
-        house: '',
+          index: '',
+          country: '',
+          region: '',
+          city: '',
+          street: '',
+          house: '',
 
-        documentType: '',
-        documentSeries: '',
-        documentNumber: '',
-        documentIssued: '',
-        documentDate: ''
+          documentType: '',
+          documentSeries: '',
+          documentNumber: '',
+          documentIssued: '',
+          documentDate: ''
+        }
+
       }
     },
     validations: {
-      firstName: {
-        required,
-        alpha
-      },
-      surName: {
-        required,
-        alpha
-      },
-      patronymic: {
-        alpha
-      },
-      gender: {},
+      form: {
+        firstName: {
+          required,
+          alpha
+        },
+        surName: {
+          required,
+          alpha
+        },
+        patronymic: {
+          alpha
+        },
+        gender: {},
 
-      birthDate: {
-        required,
-        maxValue: new Date().toLocaleDateString()
-      },
-      phone: {
-        required,
-        minLength: minLength(11),
-        maxLength: maxLength(11),
-        numeric,
-        checkFirstPhoneNum
-      },
-      isSendMessage: {},
-      clientGroup: {
-        required,
-      },
-      doctor: {},
+        birthDate: {
+          required: customRequired,
+          maxValue: customMaxDate
+        },
+        phone: {
+          required,
+          minLength: minLength(11),
+          maxLength: maxLength(11),
+          numeric,
+          checkFirstPhoneNum
+        },
+        isSendMessage: {},
+        clientGroup: {
+          required,
+        },
+        doctor: {},
 
-      index: {
-        numeric
-      },
-      country: {
-        alpha
-      },
-      region: {
-        alphaNum
-      },
-      city: {
-        required,
-        alphaNum
-      },
-      street: {
-        alphaNum
-      },
-      house: {},
+        index: {
+          numeric
+        },
+        country: {
+          alpha
+        },
+        region: {
+          alphaNum
+        },
+        city: {
+          required,
+          alphaNum
+        },
+        street: {
+          alphaNum
+        },
+        house: {},
 
-      documentType: {
-        required,
-      },
-      documentSeries: {
-        alpha
-      },
-      documentNumber: {
-        numeric
-      },
-      documentIssued: {
-        alphaNum
-      },
-      documentDate: {
-        required,
+        documentType: {
+          required,
+        },
+        documentSeries: {
+          alpha
+        },
+        documentNumber: {
+          numeric
+        },
+        documentIssued: {
+          alphaNum
+        },
+        documentDate: {
+          required,
+        }
       }
+
     },
     methods: {
       onSubmit() { // $v.form.$invalid  or $v.form.$error
         console.log('Submit')
         // console.log('data', this.$data)
-        console.log('$invalid', this.$v.$invalid)
-        console.log('$error', this.$v.$error)
-        console.log('$error firstName', this.$v.firstName.$error)
-        console.log('$error phone', this.$v.phone.$error)
-        // console.log('$anyError', this.$v.$anyError)
-        this.$v.clientGroup.$touch()
-        this.customTouch();
 
+        // console.log('$invalid', this.$v.form.$invalid)
+        // console.log('$error', this.$v.$error)
+        // console.log('$error firstName', this.$v.form.firstName.$error)
+        // console.log('$error phone', this.$v.form.phone.$error)
+        // console.log('$anyError', this.$v.$anyError)
+        this.$v.form.clientGroup.$touch()
+        this.customTouch()
+        console.log('$invalid', this.$v.form.$invalid)
         this.$emit('check')
-        /*if (this.$v.$invalid) {
-          this.$v.$touch()
-          return
-        }*/
+
+        if (!this.$v.$invalid) {
+          this.$emit('completedForm')
+        }
       },
       errorMessage(err) {
         return ERROR_MAP[err]
       },
       customTouch() {
         this.isTouch = true
-      }
+      },
+      // customRequired(val) {
+      //   if(typeof val === 'string')
+      //       return val.length !== 0
+      // },
+      // customMaxDate(date) {
+      //   return new Date(date) < new Date()
+      // },
+      // validateData(date) {
+      //   console.log('$v.birthDate')
+      //   console.log('$v.birthDate', this.$v.form.birthDate)
+      //   return this.customRequired(date) && this.customMaxDate(date)
+      // }
     },
     components: {
       FormField

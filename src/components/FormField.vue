@@ -14,11 +14,6 @@
 
 <script>
 import {ERROR_MAP} from './errorMap'
-    // const ERROR_MAP = {
-    //   required : 'Обязательное поле',
-    //   minLength : 'Слишком короткая запись',
-    //   email : 'Не корректно введён email',
-    // }
 
   export default {
     name: "FormField",
